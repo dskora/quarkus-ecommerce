@@ -1,3 +1,7 @@
 include 'common'
 include 'infrastructure'
 include 'customer'
+include 'order'
+include 'payment'
+include 'shipment'
+include 'inventory'

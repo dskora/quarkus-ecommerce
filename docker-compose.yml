@@ -1,15 +1,30 @@
 version: '3.8'
 services:
+  order:
+    build:
+      context: order
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/workspace
+      - /workspace/.gradle/
+    depends_on:
+      - kafka
+      - mysql
+    ports:
+      - "8084:8084"
+
   customer:
     build:
       context: customer
       dockerfile: Dockerfile.dev
     volumes:
       - ./:/workspace
+      - /workspace/.gradle/
     depends_on:
+      - kafka
       - mysql
     ports:
-      - "8080:8080"
+      - "8085:8085"
 
   mysql:
     image: debezium/example-mysql:1.8

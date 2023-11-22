@@ -18,6 +18,8 @@ subprojects {
 
     dependencies {
         implementation enforcedPlatform("io.quarkus:quarkus-bom:${quarkusVersion}")
-        implementation "org.projectlombok:lombok:${lombokVersion}"
+
+        compileOnly 'org.projectlombok:lombok:1.18.30'
+        annotationProcessor 'org.projectlombok:lombok:1.18.30'
     }
 }

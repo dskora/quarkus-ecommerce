@@ -19,7 +19,7 @@ public class OutboxDomainDispatcher implements DomainEventPublisher {
         this.entityManager = entityManager;
     }
 
-    public void publish(String aggregateType, Object aggregateId, List<DomainEvent> domainEvents) {
+    public void publish(String aggregateType, UUID aggregateId, List<DomainEvent> domainEvents) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
@@ -34,7 +34,7 @@ public class OutboxDomainDispatcher implements DomainEventPublisher {
             entityManager.createNativeQuery("INSERT INTO events VALUES (?, ?, ?, ?, ?)")
                 .setParameter(1, UUID.randomUUID().toString())
                 .setParameter(2, aggregateType)
-                .setParameter(3, aggregateId)
+                .setParameter(3, aggregateId.toString())
                 .setParameter(4, event.getClass().getSimpleName())
                 .setParameter(5, json)
                 .executeUpdate();

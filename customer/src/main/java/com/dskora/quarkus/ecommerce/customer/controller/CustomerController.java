@@ -1,8 +1,8 @@
 package com.dskora.quarkus.ecommerce.customer.controller;
 
 import com.dskora.quarkus.ecommerce.customer.domain.Customer;
-import com.dskora.quarkus.ecommerce.customer.dto.CustomerRequest;
-import com.dskora.quarkus.ecommerce.customer.dto.CustomerResponse;
+import com.dskora.quarkus.ecommerce.customer.dto.CreateCustomerRequest;
+import com.dskora.quarkus.ecommerce.customer.dto.CreateCustomerResponse;
 import com.dskora.quarkus.ecommerce.customer.service.CustomerService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
@@ -14,8 +14,8 @@ public class CustomerController {
     CustomerService customerService;
 
     @POST
-    public CustomerResponse registerCustomer(CustomerRequest customerRequest) {
+    public CreateCustomerResponse registerCustomer(CreateCustomerRequest customerRequest) {
         Customer customer = customerService.createCustomer(customerRequest);
-        return new CustomerResponse(customer.getId());
+        return new CreateCustomerResponse(customer.getId().toString());
     }
 }

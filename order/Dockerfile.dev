@@ -1,0 +1,8 @@
+FROM gradle:8.4.0-jdk17
+
+COPY .. /workspace/
+WORKDIR /workspace/
+
+EXPOSE 8080
+
+ENTRYPOINT ["gradle", ":order:quarkusDev", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.analytics.disabled=true"]

@@ -5,4 +5,4 @@ WORKDIR /workspace/
 
 EXPOSE 8080
 
-ENTRYPOINT ["gradle", "quarkusDev", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.analytics.disabled=true"]
+ENTRYPOINT ["gradle", ":customer:quarkusDev", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.analytics.disabled=true"]

@@ -1,11 +1,11 @@
-package com.dskora.quarkus.ecommerce.customer.api;
+package com.dskora.quarkus.ecommerce.shipment.api;
 
 import com.dskora.quarkus.ecommerce.common.domain.event.DomainEvent;
 
-public class CustomerCreatedEvent implements DomainEvent {
+public class ShipmentCreatedEvent implements DomainEvent {
     private String name;
 
-    public CustomerCreatedEvent(String name) {
+    public ShipmentCreatedEvent(String name) {
         this.name = name;
     }
 
