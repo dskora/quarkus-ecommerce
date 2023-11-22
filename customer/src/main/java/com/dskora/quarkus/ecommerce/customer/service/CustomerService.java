@@ -24,7 +24,7 @@ public class CustomerService {
         Customer customer = customerWithEvents.result;
 
         entityManager.persist(customer);
-        domainEventPublisher.publish(Customer.class, customer.getId(), customerWithEvents.events);
+        domainEventPublisher.publish(Customer.class.getSimpleName().toLowerCase(), customer.getId(), customerWithEvents.events);
 
         return customer;
     }

@@ -24,7 +24,7 @@ public class Customer {
     public static ResultWithEvents<Customer> create(String name)
     {
         Customer customer = new Customer(name);
-        CustomerCreatedEvent event = new CustomerCreatedEvent();
+        CustomerCreatedEvent event = new CustomerCreatedEvent(name);
 
         return new ResultWithEvents<>(customer, event);
     }

@@ -18,5 +18,6 @@ subprojects {
 
     dependencies {
         implementation enforcedPlatform("io.quarkus:quarkus-bom:${quarkusVersion}")
+        implementation "org.projectlombok:lombok:${lombokVersion}"
     }
 }

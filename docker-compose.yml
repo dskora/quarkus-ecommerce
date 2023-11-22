@@ -12,13 +12,66 @@ services:
       - "8080:8080"
 
   mysql:
-    image: mysql:5.7
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=quarkus_ecommerce
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=pass
+    image: debezium/example-mysql:1.8
+    container_name: mysql
+    ports:
+      - '3306:3306'
     volumes:
       - ./mysql:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_DATABASE=quarkus_ecommerce
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=pass
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.5.3
+    container_name: zookeerper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - "3306:3306"
+      - '2181:2181'
+
+  kafka:
+    image: confluentinc/cp-enterprise-kafka:5.5.3
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    links:
+      - zookeeper
+    ports:
+      - '9092:9092'
+
+  schema-registry:
+    container_name: schema-registry
+    image: confluentinc/cp-schema-registry:4.0.3
+    environment:
+      - SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL=zookeeper:2181
+      - SCHEMA_REGISTRY_HOST_NAME=schema-registry
+      - SCHEMA_REGISTRY_LISTENERS=http://schema-registry:8081
+    ports:
+      - '8081:8081'
+
+  kafka-connect:
+    container_name: kafka-connect
+    image: debezium/connect:1.8
+    ports:
+      - '8083:8083'
+    links:
+      - kafka
+      - zookeeper
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=medium_debezium
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - CONFIG_STORAGE_REPLICATION_FACTOR=1
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - OFFSET_STORAGE_REPLICATION_FACTOR=1
+      - STATUS_STORAGE_TOPIC=my_connect_statuses
+      - STATUS_STORAGE_REPLICATION_FACTOR=1
+      - REST_ADVERTISED_HOST_NAME=medium_debezium
