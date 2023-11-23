@@ -26,6 +26,32 @@ services:
     ports:
       - "8085:8085"
 
+  payment:
+    build:
+      context: payment
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/workspace
+      - /workspace/.gradle/
+    depends_on:
+      - kafka
+      - mysql
+    ports:
+      - "8086:8086"
+
+  inventory:
+    build:
+      context: inventory
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/workspace
+      - /workspace/.gradle/
+    depends_on:
+      - kafka
+      - mysql
+    ports:
+      - "8087:8087"
+
   mysql:
     image: debezium/example-mysql:1.8
     container_name: mysql

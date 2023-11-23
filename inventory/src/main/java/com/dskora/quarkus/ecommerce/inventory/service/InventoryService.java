@@ -3,8 +3,7 @@ package com.dskora.quarkus.ecommerce.inventory.service;
 import com.dskora.quarkus.ecommerce.common.domain.event.ResultWithEvents;
 import com.dskora.quarkus.ecommerce.common.domain.event.publisher.DomainEventPublisher;
 import com.dskora.quarkus.ecommerce.inventory.domain.Inventory;
-import com.dskora.quarkus.ecommerce.inventory.dto.InventoryRequest;
-import com.dskora.quarkus.ecommerce.inventory.dto.InventoryResponse;
+import com.dskora.quarkus.ecommerce.inventory.dto.RegisterProductStockRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -20,8 +19,8 @@ public class InventoryService {
     DomainEventPublisher domainEventPublisher;
 
     @Transactional
-    public Inventory createInventory(InventoryRequest inventoryRequest) {
-        ResultWithEvents<Inventory> inventoryWithEvents = Inventory.create(inventoryRequest.getName());
+    public Inventory registerProductStock(RegisterProductStockRequest inventoryRequest) {
+        ResultWithEvents<Inventory> inventoryWithEvents = Inventory.create(inventoryRequest.getProductId(), inventoryRequest.getStocks());
         Inventory inventory = inventoryWithEvents.result;
 
         entityManager.persist(inventory);
