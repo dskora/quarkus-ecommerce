@@ -1,9 +1,9 @@
 package com.dskora.quarkus.ecommerce.payment.domain;
 
+import com.dskora.quarkus.ecommerce.common.domain.api.PaymentRequestedEvent;
 import com.dskora.quarkus.ecommerce.common.domain.event.ResultWithEvents;
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.PaymentMethod;
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.PaymentState;
-import com.dskora.quarkus.ecommerce.payment.api.PaymentCreatedEvent;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -36,7 +36,7 @@ public class Payment {
     public static ResultWithEvents<Payment> request(UUID orderId, PaymentMethod paymentMethod, PaymentState paymentState)
     {
         Payment payment = new Payment(orderId, paymentMethod, paymentState);
-        PaymentCreatedEvent event = new PaymentCreatedEvent(orderId, paymentMethod, paymentState);
+        PaymentRequestedEvent event = new PaymentRequestedEvent(orderId, paymentMethod, paymentState);
 
         return new ResultWithEvents<>(payment, event);
     }

@@ -1,8 +1,8 @@
 package com.dskora.quarkus.ecommerce.shipment.controller;
 
 import com.dskora.quarkus.ecommerce.shipment.domain.Shipment;
-import com.dskora.quarkus.ecommerce.shipment.dto.ShipmentRequest;
-import com.dskora.quarkus.ecommerce.shipment.dto.ShipmentResponse;
+import com.dskora.quarkus.ecommerce.shipment.dto.CreateShipmentRequest;
+import com.dskora.quarkus.ecommerce.shipment.dto.CreateShipmentResponse;
 import com.dskora.quarkus.ecommerce.shipment.service.ShipmentService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
@@ -14,8 +14,8 @@ public class ShipmentController {
     ShipmentService shipmentService;
 
     @POST
-    public ShipmentResponse registerShipment(CustomerRequest shipmentRequest) {
-        Shipment shipment = shipmentService.createShipment(shipmentRequest);
-        return new ShipmentResponse(shipment.getId());
+    public CreateShipmentResponse requestShipment(CreateShipmentRequest shipmentRequest) {
+        Shipment shipment = shipmentService.requestShipment(shipmentRequest);
+        return new CreateShipmentResponse(shipment.getId());
     }
 }
