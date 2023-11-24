@@ -3,10 +3,6 @@ services:
   order:
     build:
       context: order
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./:/workspace
-      - /workspace/.gradle/
     depends_on:
       - kafka
       - mysql
@@ -16,10 +12,6 @@ services:
   customer:
     build:
       context: customer
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./:/workspace
-      - /workspace/.gradle/
     depends_on:
       - kafka
       - mysql
@@ -29,10 +21,6 @@ services:
   payment:
     build:
       context: payment
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./:/workspace
-      - /workspace/.gradle/
     depends_on:
       - kafka
       - mysql
@@ -42,10 +30,6 @@ services:
   inventory:
     build:
       context: inventory
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./:/workspace
-      - /workspace/.gradle/
     depends_on:
       - kafka
       - mysql
@@ -55,10 +39,6 @@ services:
   shipment:
     build:
       context: shipment
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./:/workspace
-      - /workspace/.gradle/
     depends_on:
       - kafka
       - mysql
