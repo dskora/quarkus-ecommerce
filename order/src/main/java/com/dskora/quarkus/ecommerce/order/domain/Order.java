@@ -27,6 +27,8 @@ public class Order {
     @Embedded
     private Money total;
 
+    private int quantity;
+
     @Embedded
     PaymentDetails paymentDetails;
 
@@ -37,19 +39,20 @@ public class Order {
 
     protected Order() {}
 
-    protected Order(UUID customerId, UUID productId, Money total, PaymentDetails paymentDetails) {
+    protected Order(UUID customerId, UUID productId, Money total, int quantity, PaymentDetails paymentDetails) {
         this.id = UUID.randomUUID();
         this.customerId = customerId;
         this.productId = productId;
         this.total = total;
+        this.quantity = quantity;
         this.paymentDetails = paymentDetails;
         this.state = OrderState.REQUESTED;
     }
 
-    public static ResultWithEvents<Order> create(UUID customerId, UUID productId, Money total, PaymentDetails paymentDetails)
+    public static ResultWithEvents<Order> create(UUID customerId, UUID productId, Money total, int quantity, PaymentDetails paymentDetails)
     {
-        Order order = new Order(customerId, productId, total, paymentDetails);
-        OrderCreatedEvent event = new OrderCreatedEvent(order.getId(), customerId, total, paymentDetails);
+        Order order = new Order(customerId, productId, total, quantity, paymentDetails);
+        OrderCreatedEvent event = new OrderCreatedEvent(order.getId(), customerId, total, productId, quantity, paymentDetails);
 
         return new ResultWithEvents<>(order, event);
     }

@@ -1,7 +1,11 @@
 package com.dskora.quarkus.ecommerce.inventory.domain;
 
+import com.dskora.quarkus.ecommerce.common.domain.api.CustomerCreditReservedEvent;
+import com.dskora.quarkus.ecommerce.common.domain.api.ProductOutOfStockEvent;
 import com.dskora.quarkus.ecommerce.common.domain.api.ProductRegisteredInStockEvent;
+import com.dskora.quarkus.ecommerce.common.domain.api.ProductStockReservedEvent;
 import com.dskora.quarkus.ecommerce.common.domain.event.ResultWithEvents;
+import com.dskora.quarkus.ecommerce.common.domain.valueobject.Money;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -18,25 +22,40 @@ public class Inventory {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID productId;
 
-    private int stocks;
+    private int stock;
 
     protected Inventory() {}
 
-    protected Inventory(UUID productId, int stocks) {
+    protected Inventory(UUID productId, int stock) {
         this.id = UUID.randomUUID();
         this.productId = productId;
-        this.stocks = stocks;
+        this.stock = stock;
     }
 
-    public static ResultWithEvents<Inventory> create(UUID productId, int stocks)
+    public static ResultWithEvents<Inventory> create(UUID productId, int stock)
     {
-        Inventory inventory = new Inventory(productId, stocks);
-        ProductRegisteredInStockEvent event = new ProductRegisteredInStockEvent(productId, stocks);
+        Inventory inventory = new Inventory(productId, stock);
+        ProductRegisteredInStockEvent event = new ProductRegisteredInStockEvent(productId, stock);
 
         return new ResultWithEvents<>(inventory, event);
     }
 
+    public ResultWithEvents<Inventory> reserveStock(UUID orderId, UUID customerId, int quantity) throws ProductOutOfStockException {
+        if (quantity > stock) {
+            throw new ProductOutOfStockException();
+        }
+
+        this.stock -= quantity;
+        ProductStockReservedEvent event = new ProductStockReservedEvent(orderId, customerId);
+
+        return new ResultWithEvents<>(this, event);
+    }
+
     public UUID getId() {
         return id;
+    }
+
+    public int getStock() {
+        return stock;
     }
 }

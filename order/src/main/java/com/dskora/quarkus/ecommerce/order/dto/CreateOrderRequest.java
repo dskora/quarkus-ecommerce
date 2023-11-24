@@ -16,14 +16,17 @@ public class CreateOrderRequest {
 
      private BigDecimal total;
 
+     private int quantity;
+
      private PaymentDetails paymentDetails;
 
      public CreateOrderRequest() {}
 
-     public CreateOrderRequest(UUID customerId, UUID productId, BigDecimal total, PaymentDetails paymentDetails) {
+     public CreateOrderRequest(UUID customerId, UUID productId, BigDecimal total, int quantity, PaymentDetails paymentDetails) {
           this.customerId = customerId;
           this.productId = productId;
           this.total = total;
+          this.quantity = quantity;
           this.paymentDetails = paymentDetails;
      }
 }

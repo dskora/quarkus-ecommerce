@@ -15,16 +15,22 @@ public class OrderCreatedEvent implements DomainEvent {
 
     private UUID customerId;
 
+    private UUID productId;
+
     private Money total;
+
+    private int quantity;
 
     private PaymentDetails paymentDetails;
 
     public OrderCreatedEvent() {}
 
-    public OrderCreatedEvent(UUID orderId, UUID customerId, Money total, PaymentDetails paymentDetails) {
+    public OrderCreatedEvent(UUID orderId, UUID customerId, Money total, UUID productId, int quantity, PaymentDetails paymentDetails) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.total = total;
+        this.quantity = quantity;
+        this.productId = productId;
         this.paymentDetails = paymentDetails;
     }
 }

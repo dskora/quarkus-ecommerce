@@ -20,27 +20,27 @@ import java.util.concurrent.CompletionStage;
 public class OrderEventsConsumer {
     @Inject
     CustomerService customerService;
-
-    @Incoming("order.events")
-    @Acknowledgment(Acknowledgment.Strategy.MANUAL)
-    public CompletionStage<Void> onMessage(KafkaRecord<String, String> message) throws IOException {
-        return CompletableFuture.runAsync(() -> {
-            ObjectMapper objectMapper = new ObjectMapper();
-            try {
-                String eventType = new String(message.getHeaders().lastHeader("type").value());
-                if (eventType.equals(OrderCreatedEvent.class.getSimpleName())) {
-                    OrderCreatedEvent orderCreatedEvent = objectMapper.readValue(message.getPayload(), OrderCreatedEvent.class);
-                    if (orderCreatedEvent.getPaymentDetails().isCreditPayment()) {
-                        customerService.reserveCredit(orderCreatedEvent);
-                    }
-                }
-
-                message.ack();
-            } catch(JsonMappingException e) {
-                message.nack(e);
-            } catch(JsonProcessingException e) {
-                message.nack(e);
-            }
-        });
-    }
+//
+//    @Incoming("order.events")
+//    @Acknowledgment(Acknowledgment.Strategy.MANUAL)
+//    public CompletionStage<Void> onMessage(KafkaRecord<String, String> message) throws IOException {
+//        return CompletableFuture.runAsync(() -> {
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            try {
+//                String eventType = new String(message.getHeaders().lastHeader("type").value());
+//                if (eventType.equals(OrderCreatedEvent.class.getSimpleName())) {
+//                    OrderCreatedEvent orderCreatedEvent = objectMapper.readValue(message.getPayload(), OrderCreatedEvent.class);
+//                    //if (orderCreatedEvent.getPaymentDetails().isCreditPayment()) {
+//                        //customerService.reserveCredit(orderCreatedEvent);
+//                    //}
+//                }
+//
+//                message.ack();
+//            } catch(JsonMappingException e) {
+//                message.nack(e);
+//            } catch(JsonProcessingException e) {
+//                message.nack(e);
+//            }
+//        });
+//    }
 }
