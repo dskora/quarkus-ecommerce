@@ -16,6 +16,6 @@ public class OrderController {
     @POST
     public CreateOrderResponse placeOrder(CreateOrderRequest orderRequest) {
         Order order = orderService.createOrder(orderRequest);
-        return new CreateOrderResponse(order.getId().toString());
+        return new CreateOrderResponse(order.getId());
     }
 }

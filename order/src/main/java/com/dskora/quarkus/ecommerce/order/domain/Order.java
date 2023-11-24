@@ -1,9 +1,11 @@
 package com.dskora.quarkus.ecommerce.order.domain;
 
+import com.dskora.quarkus.ecommerce.common.domain.api.OrderRejectedEvent;
 import com.dskora.quarkus.ecommerce.common.domain.event.ResultWithEvents;
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.Money;
 import com.dskora.quarkus.ecommerce.common.domain.api.OrderCreatedEvent;
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.OrderState;
+import com.dskora.quarkus.ecommerce.common.domain.valueobject.PaymentDetails;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -25,29 +27,40 @@ public class Order {
     @Embedded
     private Money total;
 
+    @Embedded
+    PaymentDetails paymentDetails;
+
     @Enumerated(EnumType.STRING)
     private OrderState state;
 
+    private String rejectionReason;
+
     protected Order() {}
 
-    protected Order(UUID customerId, UUID productId, Money total) {
+    protected Order(UUID customerId, UUID productId, Money total, PaymentDetails paymentDetails) {
         this.id = UUID.randomUUID();
         this.customerId = customerId;
         this.productId = productId;
         this.total = total;
+        this.paymentDetails = paymentDetails;
         this.state = OrderState.REQUESTED;
     }
 
-    public static ResultWithEvents<Order> create(UUID customerId, UUID productId, Money total)
+    public static ResultWithEvents<Order> create(UUID customerId, UUID productId, Money total, PaymentDetails paymentDetails)
     {
-        Order order = new Order(customerId, productId, total);
-        OrderCreatedEvent event = new OrderCreatedEvent(order.getId(), customerId, total);
+        Order order = new Order(customerId, productId, total, paymentDetails);
+        OrderCreatedEvent event = new OrderCreatedEvent(order.getId(), customerId, total, paymentDetails);
 
         return new ResultWithEvents<>(order, event);
     }
 
-    public void reject() {
+    public ResultWithEvents<Order> reject(String rejectionReason) {
         this.state = OrderState.REJECTED;
+        this.rejectionReason = rejectionReason;
+
+        OrderRejectedEvent event = new OrderRejectedEvent(this.getId(), this.customerId);
+
+        return new ResultWithEvents<>(this, event);
     }
 
     public UUID getId() {

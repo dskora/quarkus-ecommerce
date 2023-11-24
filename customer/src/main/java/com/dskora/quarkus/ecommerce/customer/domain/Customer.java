@@ -40,7 +40,7 @@ public class Customer {
     }
 
     public ResultWithEvents<Customer> reserveCredit(Money total) throws CustomerCreditLimitExceededException {
-        if (total.isGreaterThanOrEqual(this.creditLimit)) {
+        if (total.isGreaterThan(this.creditLimit)) {
             throw new CustomerCreditLimitExceededException();
         }
 
@@ -52,5 +52,9 @@ public class Customer {
 
     public UUID getId() {
         return id;
+    }
+
+    public Money getCreditLimit() {
+        return creditLimit;
     }
 }

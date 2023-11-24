@@ -10,21 +10,15 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class OrderCreatedEvent implements DomainEvent {
+public class OrderRejectedEvent implements DomainEvent {
     private UUID orderId;
 
     private UUID customerId;
 
-    private Money total;
+    public OrderRejectedEvent() {}
 
-    private PaymentDetails paymentDetails;
-
-    public OrderCreatedEvent() {}
-
-    public OrderCreatedEvent(UUID orderId, UUID customerId, Money total, PaymentDetails paymentDetails) {
+    public OrderRejectedEvent(UUID orderId, UUID customerId) {
         this.orderId = orderId;
         this.customerId = customerId;
-        this.total = total;
-        this.paymentDetails = paymentDetails;
     }
 }

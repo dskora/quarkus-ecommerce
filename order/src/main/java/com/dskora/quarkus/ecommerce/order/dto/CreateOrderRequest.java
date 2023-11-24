@@ -1,5 +1,6 @@
 package com.dskora.quarkus.ecommerce.order.dto;
 
+import com.dskora.quarkus.ecommerce.common.domain.valueobject.PaymentDetails;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,11 +16,14 @@ public class CreateOrderRequest {
 
      private BigDecimal total;
 
+     private PaymentDetails paymentDetails;
+
      public CreateOrderRequest() {}
 
-     public CreateOrderRequest(UUID customerId, UUID productId, BigDecimal total) {
+     public CreateOrderRequest(UUID customerId, UUID productId, BigDecimal total, PaymentDetails paymentDetails) {
           this.customerId = customerId;
           this.productId = productId;
           this.total = total;
+          this.paymentDetails = paymentDetails;
      }
 }

@@ -12,6 +12,7 @@ import org.eclipse.microprofile.reactive.messaging.Acknowledgment;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
@@ -26,8 +27,13 @@ public class OrderEventsConsumer {
         return CompletableFuture.runAsync(() -> {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
-                OrderCreatedEvent orderCreatedEvent = objectMapper.readValue(message.getPayload(), OrderCreatedEvent.class);
-                customerService.reserveCredit(orderCreatedEvent);
+                String eventType = new String(message.getHeaders().lastHeader("type").value());
+                if (eventType.equals(OrderCreatedEvent.class.getSimpleName())) {
+                    OrderCreatedEvent orderCreatedEvent = objectMapper.readValue(message.getPayload(), OrderCreatedEvent.class);
+                    if (orderCreatedEvent.getPaymentDetails().isCreditPayment()) {
+                        customerService.reserveCredit(orderCreatedEvent);
+                    }
+                }
 
                 message.ack();
             } catch(JsonMappingException e) {

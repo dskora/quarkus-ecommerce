@@ -54,7 +54,7 @@ services:
 
   shipment:
     build:
-      context: inventory
+      context: shipment
       dockerfile: Dockerfile.dev
     volumes:
       - ./:/workspace
@@ -100,16 +100,6 @@ services:
       - zookeeper
     ports:
       - '9092:9092'
-
-  schema-registry:
-    container_name: schema-registry
-    image: confluentinc/cp-schema-registry:4.0.3
-    environment:
-      - SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL=zookeeper:2181
-      - SCHEMA_REGISTRY_HOST_NAME=schema-registry
-      - SCHEMA_REGISTRY_LISTENERS=http://schema-registry:8081
-    ports:
-      - '8081:8081'
 
   kafka-connect:
     container_name: kafka-connect

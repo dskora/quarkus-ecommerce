@@ -6,5 +6,5 @@ import java.util.UUID;
 
 @Data
 public class CreateOrderResponse {
-    private final String id;
+    private final UUID id;
 }

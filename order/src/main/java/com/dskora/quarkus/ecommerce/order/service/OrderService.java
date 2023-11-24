@@ -24,7 +24,7 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(CreateOrderRequest orderRequest) {
-        ResultWithEvents<Order> orderWithEvents = Order.create(orderRequest.getCustomerId(), orderRequest.getProductId(), new Money(orderRequest.getTotal()));
+        ResultWithEvents<Order> orderWithEvents = Order.create(orderRequest.getCustomerId(), orderRequest.getProductId(), new Money(orderRequest.getTotal()), orderRequest.getPaymentDetails());
         Order order = orderWithEvents.result;
 
         entityManager.persist(order);
@@ -36,8 +36,9 @@ public class OrderService {
     @Transactional
     public void rejectOrder(CustomerCreditLimitExceededEvent event) {
         Order order = entityManager.find(Order.class, event.getOrderId());
-        order.reject();
+        ResultWithEvents<Order> orderWithEvents = order.reject(String.format("Customer credit limit exceeded: [creditLimit = %s]", event.getCreditLimit().getAmount().toString()));
 
         entityManager.persist(order);
+        domainEventPublisher.publish(Order.class, order.getId(), orderWithEvents.events);
     }
 }
