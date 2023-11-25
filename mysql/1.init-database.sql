@@ -5,5 +5,6 @@ CREATE TABLE events (
     aggregatetype VARCHAR(255),
     aggregateid VARCHAR(255),
     type VARCHAR(255),
-    payload LONGTEXT
+    payload LONGTEXT,
+    created_at DATETIME(6)
 );

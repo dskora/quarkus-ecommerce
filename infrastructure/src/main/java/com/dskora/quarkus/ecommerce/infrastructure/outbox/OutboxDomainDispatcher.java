@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.persistence.EntityManager;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,12 +32,13 @@ public class OutboxDomainDispatcher implements DomainEventPublisher {
                 // handle exception to stop transaction
             }
 
-            entityManager.createNativeQuery("INSERT INTO events VALUES (?, ?, ?, ?, ?)")
+            entityManager.createNativeQuery("INSERT INTO events VALUES (?, ?, ?, ?, ?, ?)")
                 .setParameter(1, UUID.randomUUID().toString())
                 .setParameter(2, aggregateType)
                 .setParameter(3, aggregateId.toString())
                 .setParameter(4, event.getClass().getSimpleName())
                 .setParameter(5, json)
+                .setParameter(6, Instant.now())
                 .executeUpdate();
         });
 

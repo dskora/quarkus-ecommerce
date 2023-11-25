@@ -1,11 +1,8 @@
 package com.dskora.quarkus.ecommerce.inventory.domain;
 
-import com.dskora.quarkus.ecommerce.common.domain.api.CustomerCreditReservedEvent;
-import com.dskora.quarkus.ecommerce.common.domain.api.ProductOutOfStockEvent;
 import com.dskora.quarkus.ecommerce.common.domain.api.ProductRegisteredInStockEvent;
 import com.dskora.quarkus.ecommerce.common.domain.api.ProductStockReservedEvent;
 import com.dskora.quarkus.ecommerce.common.domain.event.ResultWithEvents;
-import com.dskora.quarkus.ecommerce.common.domain.valueobject.Money;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import org.hibernate.annotations.JdbcTypeCode;

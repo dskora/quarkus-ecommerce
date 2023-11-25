@@ -1,13 +1,14 @@
-package com.dskora.quarkus.ecommerce.inventory.consumer;
+package com.dskora.quarkus.ecommerce.shipment.consumer;
 
-import com.dskora.quarkus.ecommerce.common.domain.api.OrderCreatedEvent;
-import com.dskora.quarkus.ecommerce.inventory.service.InventoryService;
+import com.dskora.quarkus.ecommerce.common.domain.api.PaymentCompletedEvent;
+import com.dskora.quarkus.ecommerce.shipment.service.ShipmentService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.smallrye.reactive.messaging.kafka.KafkaRecord;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Acknowledgment;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
@@ -16,21 +17,20 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 @ApplicationScoped
-public class OrderEventsConsumer {
+public class PaymentEventsConsumer {
     @Inject
-    InventoryService inventoryService;
+    ShipmentService shipmentService;
 
-    @Incoming("order.events")
+    @Incoming("payment.events")
     @Acknowledgment(Acknowledgment.Strategy.MANUAL)
     public CompletionStage<Void> onMessage(KafkaRecord<String, String> message) throws IOException {
-        System.out.println("DDD");
         return CompletableFuture.runAsync(() -> {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 String eventType = new String(message.getHeaders().lastHeader("type").value());
-                if (eventType.equals(OrderCreatedEvent.class.getSimpleName())) {
-                    OrderCreatedEvent orderCreatedEvent = objectMapper.readValue(message.getPayload(), OrderCreatedEvent.class);
-                    inventoryService.reserveStock(orderCreatedEvent);
+                if (eventType.equals(PaymentCompletedEvent.class.getSimpleName())) {
+                    PaymentCompletedEvent paymentCompletedEvent = objectMapper.readValue(message.getPayload(), PaymentCompletedEvent.class);
+                    shipmentService.requestShipment(paymentCompletedEvent.getOrderId(), paymentCompletedEvent.getOrderShipmentProvider());
                 }
 
                 message.ack();

@@ -1,5 +1,6 @@
 package com.dskora.quarkus.ecommerce.order.domain;
 
+import com.dskora.quarkus.ecommerce.common.domain.api.OrderCompletedEvent;
 import com.dskora.quarkus.ecommerce.common.domain.api.OrderRejectedEvent;
 import com.dskora.quarkus.ecommerce.common.domain.event.ResultWithEvents;
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.Money;
@@ -62,6 +63,15 @@ public class Order {
         this.rejectionReason = rejectionReason;
 
         OrderRejectedEvent event = new OrderRejectedEvent(this.getId(), this.customerId);
+
+        return new ResultWithEvents<>(this, event);
+    }
+
+    public ResultWithEvents<Order> complete()
+    {
+        this.state = OrderState.COMPLETED;
+
+        OrderCompletedEvent event = new OrderCompletedEvent(this.getId());
 
         return new ResultWithEvents<>(this, event);
     }

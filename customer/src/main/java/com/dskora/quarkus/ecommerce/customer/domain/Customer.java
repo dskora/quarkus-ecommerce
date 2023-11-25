@@ -7,9 +7,12 @@ import com.dskora.quarkus.ecommerce.common.domain.api.CustomerCreatedEvent;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity(name = "customers")
@@ -22,6 +25,12 @@ public class Customer {
 
     @Embedded
     private Money creditLimit;
+
+    @CreationTimestamp
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    private Instant lastUpdatedAt;
 
     protected Customer() {}
 

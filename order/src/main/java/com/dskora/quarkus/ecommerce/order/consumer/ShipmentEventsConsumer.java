@@ -1,7 +1,7 @@
-package com.dskora.quarkus.ecommerce.inventory.consumer;
+package com.dskora.quarkus.ecommerce.order.consumer;
 
-import com.dskora.quarkus.ecommerce.common.domain.api.OrderCreatedEvent;
-import com.dskora.quarkus.ecommerce.inventory.service.InventoryService;
+import com.dskora.quarkus.ecommerce.common.domain.api.ShipmentDeliveredEvent;
+import com.dskora.quarkus.ecommerce.order.service.OrderService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,27 +16,27 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 @ApplicationScoped
-public class OrderEventsConsumer {
+public class ShipmentEventsConsumer {
     @Inject
-    InventoryService inventoryService;
+    OrderService orderService;
 
-    @Incoming("order.events")
+    @Incoming("shipment.events")
     @Acknowledgment(Acknowledgment.Strategy.MANUAL)
     public CompletionStage<Void> onMessage(KafkaRecord<String, String> message) throws IOException {
-        System.out.println("DDD");
         return CompletableFuture.runAsync(() -> {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
                 String eventType = new String(message.getHeaders().lastHeader("type").value());
-                if (eventType.equals(OrderCreatedEvent.class.getSimpleName())) {
-                    OrderCreatedEvent orderCreatedEvent = objectMapper.readValue(message.getPayload(), OrderCreatedEvent.class);
-                    inventoryService.reserveStock(orderCreatedEvent);
+                if (eventType.equals(ShipmentDeliveredEvent.class.getSimpleName())) {
+                    ShipmentDeliveredEvent shipmentDeliveredEvent = objectMapper.readValue(message.getPayload(), ShipmentDeliveredEvent.class);
+                    orderService.completeOrder(shipmentDeliveredEvent.getOrderId());
                 }
 
                 message.ack();
             } catch(JsonMappingException e) {
-                message.nack(e);
+                System.out.println(e.getMessage());
             } catch(JsonProcessingException e) {
+                System.out.println(e.getMessage());
                 message.nack(e);
             }
         });

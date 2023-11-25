@@ -5,21 +5,17 @@ import com.dskora.quarkus.ecommerce.common.domain.valueobject.ShipmentProvider;
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.ShipmentState;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
 
 import java.util.UUID;
 
 @Getter
 @Setter
-public class ShipmentRequestedEvent implements DomainEvent {
+public class ShipmentCancelledEvent implements DomainEvent {
     private UUID orderId;
 
-    private ShipmentProvider shipmentProvider;
+    public ShipmentCancelledEvent() {}
 
-    public ShipmentRequestedEvent() {}
-
-    public ShipmentRequestedEvent(UUID orderId, ShipmentProvider shipmentProvider) {
+    public ShipmentCancelledEvent(UUID orderId) {
         this.orderId = orderId;
-        this.shipmentProvider = shipmentProvider;
     }
 }

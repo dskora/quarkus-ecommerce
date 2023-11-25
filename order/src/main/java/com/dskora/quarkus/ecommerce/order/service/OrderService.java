@@ -51,4 +51,13 @@ public class OrderService {
         entityManager.persist(order);
         domainEventPublisher.publish(Order.class, order.getId(), orderWithEvents.events);
     }
+
+    @Transactional
+    public void completeOrder(UUID id) {
+        Order order = entityManager.find(Order.class, id);
+        ResultWithEvents<Order> orderWithEvents = order.complete();
+
+        entityManager.persist(order);
+        domainEventPublisher.publish(Order.class, order.getId(), orderWithEvents.events);
+    }
 }

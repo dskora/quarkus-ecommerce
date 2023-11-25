@@ -1,6 +1,5 @@
 package com.dskora.quarkus.ecommerce.order.consumer;
 
-import com.dskora.quarkus.ecommerce.common.domain.api.CustomerCreditLimitExceededEvent;
 import com.dskora.quarkus.ecommerce.common.domain.api.ProductOutOfStockEvent;
 import com.dskora.quarkus.ecommerce.order.service.OrderService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,7 +23,6 @@ public class InventoryEventsConsumer {
     @Incoming("inventory.events")
     @Acknowledgment(Acknowledgment.Strategy.MANUAL)
     public CompletionStage<Void> onMessage(KafkaRecord<String, String> message) throws IOException {
-
         return CompletableFuture.runAsync(() -> {
             ObjectMapper objectMapper = new ObjectMapper();
             try {
