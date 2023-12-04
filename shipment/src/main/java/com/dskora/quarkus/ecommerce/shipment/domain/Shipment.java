@@ -19,6 +19,8 @@ public class Shipment {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID orderId;
 
+    private String address;
+
     @Enumerated(EnumType.STRING)
     private ShipmentProvider shipmentProvider;
 
@@ -27,19 +29,32 @@ public class Shipment {
 
     public Shipment() {}
 
-    public Shipment(UUID orderId, ShipmentProvider shipmentProvider) {
+    public Shipment(UUID orderId, ShipmentProvider shipmentProvider, String address) {
         this.id = UUID.randomUUID();
         this.orderId = orderId;
         this.shipmentProvider = shipmentProvider;
+        this.address = address;
         this.shipmentState = ShipmentState.REQUESTED;
     }
 
-    public static ResultWithEvents<Shipment> request(UUID orderId, ShipmentProvider shipmentProvider)
+    public static ResultWithEvents<Shipment> request(UUID orderId, ShipmentProvider shipmentProvider, String address)
     {
-        Shipment shipment = new Shipment(orderId, shipmentProvider);
-        ShipmentRequestedEvent event = new ShipmentRequestedEvent(orderId, shipmentProvider);
+        Shipment shipment = new Shipment(orderId, shipmentProvider, address);
+        ShipmentRequestedEvent event = new ShipmentRequestedEvent(orderId, shipmentProvider, address);
 
         return new ResultWithEvents<>(shipment, event);
+    }
+
+    public ResultWithEvents<Shipment> prepare()
+    {
+        if (shipmentState == ShipmentState.PREPARED || shipmentState != ShipmentState.REQUESTED) {
+            return new ResultWithEvents<>(this);
+        }
+
+        this.shipmentState = ShipmentState.PREPARED;
+        ShipmentPreparedEvent event = new ShipmentPreparedEvent(orderId);
+
+        return new ResultWithEvents<>(this, event);
     }
 
     public ResultWithEvents<Shipment> complete()

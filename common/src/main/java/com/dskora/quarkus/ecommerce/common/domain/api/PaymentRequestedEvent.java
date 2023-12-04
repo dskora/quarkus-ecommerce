@@ -22,15 +22,12 @@ public class PaymentRequestedEvent implements DomainEvent {
 
     private PaymentMethod paymentMethod;
 
-    private ShipmentProvider orderShipmentProvider;
-
     public PaymentRequestedEvent() {}
 
-    public PaymentRequestedEvent(UUID orderId, UUID customerId, Money amount, PaymentMethod paymentMethod, ShipmentProvider orderShipmentProvider) {
+    public PaymentRequestedEvent(UUID orderId, UUID customerId, Money amount, PaymentMethod paymentMethod) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.amount = amount;
         this.paymentMethod = paymentMethod;
-        this.orderShipmentProvider = orderShipmentProvider;
     }
 }

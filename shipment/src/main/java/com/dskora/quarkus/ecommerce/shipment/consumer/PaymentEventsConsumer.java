@@ -30,7 +30,7 @@ public class PaymentEventsConsumer {
                 String eventType = new String(message.getHeaders().lastHeader("type").value());
                 if (eventType.equals(PaymentCompletedEvent.class.getSimpleName())) {
                     PaymentCompletedEvent paymentCompletedEvent = objectMapper.readValue(message.getPayload(), PaymentCompletedEvent.class);
-                    shipmentService.requestShipment(paymentCompletedEvent.getOrderId(), paymentCompletedEvent.getOrderShipmentProvider());
+                    shipmentService.prepareShipment(paymentCompletedEvent.getOrderId());
                 }
 
                 message.ack();

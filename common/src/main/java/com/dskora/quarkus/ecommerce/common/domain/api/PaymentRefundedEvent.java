@@ -14,21 +14,9 @@ import java.util.UUID;
 public class PaymentRefundedEvent implements DomainEvent {
     private UUID orderId;
 
-    private UUID customerId;
-
-    private Money amount;
-
-    private PaymentMethod paymentMethod;
-
-    private ShipmentProvider orderShipmentProvider;
-
     public PaymentRefundedEvent() {}
 
-    public PaymentRefundedEvent(UUID orderId, UUID customerId, Money amount, PaymentMethod paymentMethod, ShipmentProvider orderShipmentProvider) {
+    public PaymentRefundedEvent(UUID orderId) {
         this.orderId = orderId;
-        this.customerId = customerId;
-        this.amount = amount;
-        this.paymentMethod = paymentMethod;
-        this.orderShipmentProvider = orderShipmentProvider;
     }
 }

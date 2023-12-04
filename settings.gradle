@@ -4,4 +4,13 @@ include 'customer'
 include 'order'
 include 'payment'
 include 'shipment'
-include 'inventory'
+
+/* Order Service */
+include 'order:order-main'
+include 'order:order-api-web'
+include 'order:order-event'
+
+/* Inventory Service */
+include 'inventory:inventory-main'
+include 'inventory:inventory-api-web'
+include 'inventory:inventory-event'

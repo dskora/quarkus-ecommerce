@@ -38,25 +38,21 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentState paymentState;
 
-    @Enumerated
-    private ShipmentProvider orderShipmentProvider;
-
     protected Payment() {}
 
-    protected Payment(UUID orderId, UUID customerId, Money amount, PaymentMethod paymentMethod, ShipmentProvider orderShipmentProvider) {
+    protected Payment(UUID orderId, UUID customerId, Money amount, PaymentMethod paymentMethod) {
         this.id = UUID.randomUUID();
         this.orderId = orderId;
         this.amount = amount;
         this.customerId = customerId;
         this.paymentMethod = paymentMethod;
-        this.orderShipmentProvider = orderShipmentProvider;
         this.paymentState = PaymentState.REQUESTED;
     }
 
-    public static ResultWithEvents<Payment> request(UUID orderId, UUID customerId, Money amount, PaymentMethod paymentMethod, ShipmentProvider orderShipmentProvider)
+    public static ResultWithEvents<Payment> request(UUID orderId, UUID customerId, Money amount, PaymentMethod paymentMethod)
     {
-        Payment payment = new Payment(orderId, customerId, amount, paymentMethod, orderShipmentProvider);
-        PaymentRequestedEvent event = new PaymentRequestedEvent(orderId, customerId, amount, paymentMethod, orderShipmentProvider);
+        Payment payment = new Payment(orderId, customerId, amount, paymentMethod);
+        PaymentRequestedEvent event = new PaymentRequestedEvent(orderId, customerId, amount, paymentMethod);
 
         return new ResultWithEvents<>(payment, event);
     }
@@ -68,7 +64,7 @@ public class Payment {
         }
 
         this.paymentState = PaymentState.COMPLETED;
-        PaymentCompletedEvent event = new PaymentCompletedEvent(orderId, customerId, amount, paymentMethod, orderShipmentProvider);
+        PaymentCompletedEvent event = new PaymentCompletedEvent(orderId);
 
         return new ResultWithEvents<>(this, event);
     }
@@ -80,7 +76,7 @@ public class Payment {
         }
 
         this.paymentState = PaymentState.COMPLETED;
-        PaymentCancelledEvent event = new PaymentCancelledEvent(orderId, customerId, amount, paymentMethod, orderShipmentProvider);
+        PaymentCancelledEvent event = new PaymentCancelledEvent(orderId);
 
         return new ResultWithEvents<>(this, event);
     }
@@ -92,7 +88,7 @@ public class Payment {
         }
 
         this.paymentState = PaymentState.COMPLETED;
-        PaymentRefundedEvent event = new PaymentRefundedEvent(orderId, customerId, amount, paymentMethod, orderShipmentProvider);
+        PaymentRefundedEvent event = new PaymentRefundedEvent(orderId);
 
         return new ResultWithEvents<>(this, event);
     }

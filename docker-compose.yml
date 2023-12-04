@@ -2,7 +2,7 @@ version: '3.8'
 services:
   order:
     build:
-      context: order
+      context: order/order-main
     depends_on:
       - kafka
       - mysql
@@ -29,7 +29,7 @@ services:
 
   inventory:
     build:
-      context: inventory
+      context: inventory/inventory-main
     depends_on:
       - kafka
       - mysql

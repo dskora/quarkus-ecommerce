@@ -19,8 +19,8 @@ public class ShipmentController {
     ShipmentService shipmentService;
 
     @POST
-    public CreateShipmentResponse requestShipment(CreateShipmentRequest shipmentRequest) {
-        Shipment shipment = shipmentService.requestShipment(shipmentRequest.getOrderId(), shipmentRequest.getShipmentProvider());
+    public CreateShipmentResponse prepareShipment(CreateShipmentRequest shipmentRequest) {
+        Shipment shipment = shipmentService.requestShipment(shipmentRequest.getOrderId(), shipmentRequest.getShipmentProvider(), shipmentRequest.getAddress());
         return new CreateShipmentResponse(shipment.getId());
     }
 

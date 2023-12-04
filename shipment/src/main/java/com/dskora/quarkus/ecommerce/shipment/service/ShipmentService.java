@@ -5,6 +5,7 @@ import com.dskora.quarkus.ecommerce.common.domain.event.publisher.DomainEventPub
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.ShipmentProvider;
 import com.dskora.quarkus.ecommerce.shipment.domain.Shipment;
 import com.dskora.quarkus.ecommerce.shipment.dto.CreateShipmentRequest;
+import com.dskora.quarkus.ecommerce.shipment.repository.ShipmentRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -15,40 +16,51 @@ import java.util.UUID;
 
 @ApplicationScoped
 public class ShipmentService {
-    @PersistenceContext
-    EntityManager entityManager;
+    @Inject
+    ShipmentRepository shipmentRepository;
 
     @Inject
     DomainEventPublisher domainEventPublisher;
 
     @Transactional
-    public Shipment requestShipment(UUID orderId, ShipmentProvider provider) {
-        ResultWithEvents<Shipment> shipmentWithEvents = Shipment.request(orderId, provider);
+    public Shipment requestShipment(UUID orderId, ShipmentProvider provider, String address) {
+        ResultWithEvents<Shipment> shipmentWithEvents = Shipment.request(orderId, provider, address);
         Shipment shipment = shipmentWithEvents.result;
 
-        entityManager.persist(shipment);
+        shipmentRepository.persist(shipment);
         domainEventPublisher.publish(Shipment.class, shipment.getId(), shipmentWithEvents.events);
 
         return shipment;
     }
 
     @Transactional
-    public Shipment completeShipment(UUID id) {
-        Shipment shipment = entityManager.find(Shipment.class, id);
+    public Shipment prepareShipment(UUID orderId) {
+        Shipment shipment = shipmentRepository.findByOrderId(orderId);
 
-        ResultWithEvents<Shipment> customerWithEvents = shipment.complete();
-        entityManager.persist(shipment);
+        ResultWithEvents<Shipment> customerWithEvents = shipment.prepare();
+        shipmentRepository.persist(shipment);
         domainEventPublisher.publish(Shipment.class, shipment.getId(), customerWithEvents.events);
 
         return shipment;
     }
 
     @Transactional
-    public Shipment cancelShipment(UUID id) {
-        Shipment shipment = entityManager.find(Shipment.class, id);
+    public Shipment completeShipment(UUID orderId) {
+        Shipment shipment = shipmentRepository.findByOrderId(orderId);
+
+        ResultWithEvents<Shipment> customerWithEvents = shipment.complete();
+        shipmentRepository.persist(shipment);
+        domainEventPublisher.publish(Shipment.class, shipment.getId(), customerWithEvents.events);
+
+        return shipment;
+    }
+
+    @Transactional
+    public Shipment cancelShipment(UUID orderId) {
+        Shipment shipment = shipmentRepository.findByOrderId(orderId);
 
         ResultWithEvents<Shipment> customerWithEvents = shipment.cancel();
-        entityManager.persist(shipment);
+        shipmentRepository.persist(shipment);
         domainEventPublisher.publish(Shipment.class, shipment.getId(), customerWithEvents.events);
 
         return shipment;

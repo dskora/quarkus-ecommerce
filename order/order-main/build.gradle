@@ -1,0 +1,17 @@
+plugins {
+    id "io.quarkus" version "${quarkusVersion}"
+}
+
+dependencies {
+    implementation project(":common")
+    implementation project(":infrastructure")
+    implementation project(":order:order-api-web")
+    implementation project(":order:order-event")
+
+    implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'
+    implementation 'io.quarkus:quarkus-smallrye-reactive-messaging-kafka'
+    implementation 'io.quarkus:quarkus-smallrye-openapi'
+
+    implementation 'io.quarkus:quarkus-jdbc-mysql'
+    implementation 'io.quarkus:quarkus-hibernate-orm'
+}

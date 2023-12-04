@@ -16,10 +16,13 @@ public class ShipmentRequestedEvent implements DomainEvent {
 
     private ShipmentProvider shipmentProvider;
 
+    private String address;
+
     public ShipmentRequestedEvent() {}
 
-    public ShipmentRequestedEvent(UUID orderId, ShipmentProvider shipmentProvider) {
+    public ShipmentRequestedEvent(UUID orderId, ShipmentProvider shipmentProvider, String address) {
         this.orderId = orderId;
         this.shipmentProvider = shipmentProvider;
+        this.address = address;
     }
 }
