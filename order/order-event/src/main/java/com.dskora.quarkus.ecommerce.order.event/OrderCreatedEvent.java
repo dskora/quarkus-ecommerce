@@ -2,8 +2,8 @@ package com.dskora.quarkus.ecommerce.common.domain.api;
 
 import com.dskora.quarkus.ecommerce.common.domain.event.DomainEvent;
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.Money;
-import com.dskora.quarkus.ecommerce.common.domain.valueobject.PaymentDetails;
-import com.dskora.quarkus.ecommerce.common.domain.valueobject.ShipmentDetails;
+import com.dskora.quarkus.ecommerce.payment.common.PaymentDetails;
+import com.dskora.quarkus.ecommerce.shipment.common.ShipmentDetails;
 import lombok.Getter;
 import lombok.Setter;
 

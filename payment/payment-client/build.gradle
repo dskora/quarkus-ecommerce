@@ -1,0 +1,6 @@
+dependencies {
+    implementation project(":payment:payment-api-web")
+
+    implementation 'io.quarkus:quarkus-rest-client-reactive-jackson'
+    implementation 'io.smallrye.stork:stork-service-discovery-consul'
+}

@@ -1,7 +1,7 @@
 package com.dskora.quarkus.ecommerce.order.api.web;
 
-import com.dskora.quarkus.ecommerce.common.domain.valueobject.PaymentDetails;
-import com.dskora.quarkus.ecommerce.common.domain.valueobject.ShipmentDetails;
+import com.dskora.quarkus.ecommerce.payment.common.PaymentDetails;
+import com.dskora.quarkus.ecommerce.shipment.common.ShipmentDetails;
 import lombok.Getter;
 import lombok.Setter;
 

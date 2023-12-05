@@ -1,0 +1,18 @@
+plugins {
+    id "io.quarkus" version "${quarkusVersion}"
+}
+
+dependencies {
+    implementation project(":common")
+    implementation project(":infrastructure")
+    implementation project(":shipment:shipment-common")
+    implementation project(":shipment:shipment-api-web")
+    implementation project(":shipment:shipment-event")
+    implementation project(":shipment:shipment-client")
+
+    implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'
+    implementation 'io.quarkus:quarkus-smallrye-openapi'
+
+    implementation 'io.quarkus:quarkus-jdbc-mysql'
+    implementation 'io.quarkus:quarkus-hibernate-orm-panache'
+}

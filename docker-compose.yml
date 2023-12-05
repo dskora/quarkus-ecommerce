@@ -6,12 +6,13 @@ services:
     depends_on:
       - kafka
       - mysql
+      - consul
     ports:
       - "8084:8084"
 
   customer:
     build:
-      context: customer
+      context: customer/customer-main
     depends_on:
       - kafka
       - mysql
@@ -20,7 +21,7 @@ services:
 
   payment:
     build:
-      context: payment
+      context: payment/payment-main
     depends_on:
       - kafka
       - mysql
@@ -38,12 +39,20 @@ services:
 
   shipment:
     build:
-      context: shipment
+      context: shipment/shipment-main
     depends_on:
       - kafka
       - mysql
     ports:
       - "8088:8088"
+
+  service-discovery:
+    build:
+      context: service-discovery
+    depends_on:
+      - consul
+    ports:
+      - "8089:8089"
 
   mysql:
     image: debezium/example-mysql:1.8
@@ -99,3 +108,10 @@ services:
       - STATUS_STORAGE_TOPIC=my_connect_statuses
       - STATUS_STORAGE_REPLICATION_FACTOR=1
       - REST_ADVERTISED_HOST_NAME=medium_debezium
+
+  consul:
+    image: consul:1.15.4
+    container_name: consul
+    command: agent -dev -ui -server -client 0.0.0.0
+    ports:
+      - '8500:8500'

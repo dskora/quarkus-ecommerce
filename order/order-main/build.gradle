@@ -5,6 +5,20 @@ plugins {
 dependencies {
     implementation project(":common")
     implementation project(":infrastructure")
+    implementation project(":payment:payment-common")
+    implementation project(":shipment:shipment-common")
+    implementation project(":inventory:inventory-client")
+    implementation project(":inventory:inventory-api-web")
+    implementation project(":inventory:inventory-event")
+    implementation project(":payment:payment-client")
+    implementation project(":payment:payment-api-web")
+    implementation project(":payment:payment-event")
+    implementation project(":customer:customer-client")
+    implementation project(":customer:customer-api-web")
+    implementation project(":customer:customer-event")
+    implementation project(":shipment:shipment-client")
+    implementation project(":shipment:shipment-api-web")
+    implementation project(":shipment:shipment-event")
     implementation project(":order:order-api-web")
     implementation project(":order:order-event")
 
@@ -14,4 +28,7 @@ dependencies {
 
     implementation 'io.quarkus:quarkus-jdbc-mysql'
     implementation 'io.quarkus:quarkus-hibernate-orm'
+
+    implementation 'io.quarkus:quarkus-rest-client-reactive-jackson'
+    implementation 'io.smallrye.stork:stork-service-discovery-consul'
 }

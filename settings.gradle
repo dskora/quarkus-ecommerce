@@ -1,16 +1,34 @@
 include 'common'
 include 'infrastructure'
-include 'customer'
-include 'order'
-include 'payment'
-include 'shipment'
+include 'service-discovery'
 
 /* Order Service */
 include 'order:order-main'
 include 'order:order-api-web'
 include 'order:order-event'
 
+/* Customer Service */
+include 'customer:customer-client'
+include 'customer:customer-main'
+include 'customer:customer-api-web'
+include 'customer:customer-event'
+
 /* Inventory Service */
+include 'inventory:inventory-client'
 include 'inventory:inventory-main'
 include 'inventory:inventory-api-web'
 include 'inventory:inventory-event'
+
+/* Payment Service */
+include 'payment:payment-common'
+include 'payment:payment-client'
+include 'payment:payment-main'
+include 'payment:payment-api-web'
+include 'payment:payment-event'
+
+/* Shipment Service */
+include 'shipment:shipment-common'
+include 'shipment:shipment-client'
+include 'shipment:shipment-main'
+include 'shipment:shipment-api-web'
+include 'shipment:shipment-event'

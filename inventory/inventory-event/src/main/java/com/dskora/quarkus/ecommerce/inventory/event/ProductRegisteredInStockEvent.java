@@ -11,12 +11,12 @@ import java.util.UUID;
 public class ProductRegisteredInStockEvent implements DomainEvent {
     private UUID productId;
 
-    private int stocks;
+    private int quantity;
 
     public ProductRegisteredInStockEvent() {}
 
-    public ProductRegisteredInStockEvent(UUID productId, int stocks) {
+    public ProductRegisteredInStockEvent(UUID productId, int quantity) {
         this.productId = productId;
-        this.stocks = stocks;
+        this.quantity = quantity;
     }
 }

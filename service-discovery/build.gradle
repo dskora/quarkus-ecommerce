@@ -1,0 +1,9 @@
+plugins {
+    id "io.quarkus" version "${quarkusVersion}"
+}
+
+dependencies {
+    implementation 'io.quarkus:quarkus-resteasy-reactive'
+    implementation 'io.smallrye.stork:stork-service-discovery-consul'
+    implementation 'io.smallrye.reactive:smallrye-mutiny-vertx-consul-client'
+}

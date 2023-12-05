@@ -11,12 +11,9 @@ import java.util.UUID;
 public class ProductStockReservedEvent implements DomainEvent {
     private UUID orderId;
 
-    private UUID customerId;
-
     public ProductStockReservedEvent() {}
 
-    public ProductStockReservedEvent(UUID orderId, UUID customerId) {
+    public ProductStockReservedEvent(UUID orderId) {
         this.orderId = orderId;
-        this.customerId = customerId;
     }
 }

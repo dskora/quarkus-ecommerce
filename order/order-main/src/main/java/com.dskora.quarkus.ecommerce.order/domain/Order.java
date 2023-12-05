@@ -6,14 +6,16 @@ import com.dskora.quarkus.ecommerce.common.domain.event.ResultWithEvents;
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.Money;
 import com.dskora.quarkus.ecommerce.common.domain.api.OrderCreatedEvent;
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.OrderState;
-import com.dskora.quarkus.ecommerce.common.domain.valueobject.PaymentDetails;
-import com.dskora.quarkus.ecommerce.common.domain.valueobject.ShipmentDetails;
+import com.dskora.quarkus.ecommerce.payment.common.PaymentDetails;
+import com.dskora.quarkus.ecommerce.shipment.common.ShipmentDetails;
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
+@Getter
 @Entity(name = "orders")
 public class Order {
     @Id

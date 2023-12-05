@@ -1,3 +1,5 @@
 dependencies {
     implementation project(":common")
+    implementation project(":payment:payment-common")
+    implementation project(":shipment:shipment-common")
 }

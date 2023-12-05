@@ -11,15 +11,15 @@ import java.util.UUID;
 public class ProductOutOfStockEvent implements DomainEvent {
     private UUID orderId;
 
-    private UUID customerId;
+    private UUID productId;
 
-    private int stock;
+    private int quantity;
 
     public ProductOutOfStockEvent() {}
 
-    public ProductOutOfStockEvent(UUID orderId, UUID customerId, int stock) {
+    public ProductOutOfStockEvent(UUID orderId, UUID productId, int quantity) {
         this.orderId = orderId;
-        this.customerId = customerId;
-        this.stock = stock;
+        this.productId = productId;
+        this.quantity = quantity;
     }
 }

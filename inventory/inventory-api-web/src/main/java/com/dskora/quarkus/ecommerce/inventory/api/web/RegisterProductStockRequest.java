@@ -10,12 +10,12 @@ import java.util.UUID;
 public class RegisterProductStockRequest {
      private UUID productId;
 
-     private int stock;
+     private int quantity;
 
      public RegisterProductStockRequest() {}
 
-     public RegisterProductStockRequest(UUID productId, int stock) {
+     public RegisterProductStockRequest(UUID productId, int quantity) {
           this.productId = productId;
-          this.stock = stock;
+          this.quantity = quantity;
      }
 }

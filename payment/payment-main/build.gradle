@@ -1,0 +1,20 @@
+plugins {
+    id "io.quarkus" version "${quarkusVersion}"
+}
+
+dependencies {
+    implementation project(":common")
+    implementation project(":infrastructure")
+    implementation project(":payment:payment-common")
+    implementation project(":payment:payment-api-web")
+    implementation project(":payment:payment-event")
+
+    implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'
+    implementation 'io.quarkus:quarkus-smallrye-openapi'
+
+    implementation 'io.quarkus:quarkus-jdbc-mysql'
+    implementation 'io.quarkus:quarkus-hibernate-orm-panache'
+
+    implementation 'io.quarkus:quarkus-rest-client-reactive'
+    implementation 'io.smallrye.stork:stork-service-discovery-consul'
+}

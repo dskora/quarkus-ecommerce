@@ -1,6 +1,25 @@
 # Quarkus Ecommerce
 
-## Getting started
+## What are we doing here ?
+
+- Event-Driven Architecture
+
+- Domain Driven Design (DDD)
+
+- SAGA Pattern: process & rollback ( compensating transactions )
+
+- Outbox Pattern : Pulling Outbox Table With Scheduler , Saga Status
+
+    - Cover Failure Scenarios :
+
+        - Ensure idempotency using outbox table in each service
+
+        - Prevent concurrency issues with optimistic looks & DB constraints
+
+        - Kepp updating saga and order status for each operation
+
+
+- Kafka Messaging Systems for SAGA Orchestration
 
 ## Prerequisite
 - Framework: Quarkus
@@ -12,23 +31,12 @@
 ```
 
 ## Testing
-Customer uses its own credit as a payment method
+### Scenario
+Register a new customer with credit<br />
+Set an inventory stock<br />
+Customer uses its own account credit to finalize an order
+ 
+> Events - CustomerCreated &#xb7; ProductRegisteredInStock &#xb7; (Saga Run) OrderCreated &#xb7; ProductStockReserved &#xb7; PaymentRequested &#xb7; CustomerCreditReserved &#xb7; PaymentCompleted &#xb7; ShipmentRequested
 ```bash
-# Example product id
-productId='"3fa85f64-5717-4562-b3fc-2c963f66afa6"'
-
-customerId=$(curl -s -X POST localhost:8085/customers -H "Content-type: application/json" -d '{"name": "Tom Andrews", "creditLimit": 1000}' | jq '.id')
-curl -X POST localhost:8087/inventory/products -H "Content-type: application/json" -d '{"productId": '$productId', "stocks": "100"}'
-curl -X POST localhost:8084/orders -H "Content-type: application/json" -d '{
-  "customerId": '$customerId',
-  "productId": '$productId',
-  "total": 100,
-  "paymentDetails": {
-    "paymentMethod": "ACCOUNT_CREDIT"
-  },
-  "shipmentDetails": {
-    "shipmentProvider": "DHL",
-    "address": "7 Kings Road, London, UK"
-  }
-}'
+e2e-test/customer-uses-account-credit.sh
 ```
