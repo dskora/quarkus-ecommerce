@@ -1,9 +1,6 @@
 package com.dskora.quarkus.ecommerce.inventory.web;
 
-import com.dskora.quarkus.ecommerce.inventory.api.web.RegisterProductStockRequest;
-import com.dskora.quarkus.ecommerce.inventory.api.web.RegisterProductStockResponse;
-import com.dskora.quarkus.ecommerce.inventory.api.web.ReserveProductStockRequest;
-import com.dskora.quarkus.ecommerce.inventory.api.web.ReserveProductStockResponse;
+import com.dskora.quarkus.ecommerce.inventory.api.web.*;
 import com.dskora.quarkus.ecommerce.inventory.domain.Stock;
 import com.dskora.quarkus.ecommerce.inventory.domain.StockService;
 import jakarta.inject.Inject;
@@ -30,5 +27,12 @@ public class InventoryController {
     public ReserveProductStockResponse reserveStock(ReserveProductStockRequest request) {
         Stock inventory = inventoryService.reserveProductStock(request.getOrderId(), request.getProductId(), request.getQuantity());
         return new ReserveProductStockResponse(inventory.getId());
+    }
+
+    @POST
+    @Path("/stock/release")
+    public ReleaseProductStockResponse releaseStock(ReleaseProductStockRequest request) {
+        Stock inventory = inventoryService.releaseProductStock(request.getOrderId(), request.getProductId(), request.getQuantity());
+        return new ReleaseProductStockResponse(inventory.getId());
     }
 }

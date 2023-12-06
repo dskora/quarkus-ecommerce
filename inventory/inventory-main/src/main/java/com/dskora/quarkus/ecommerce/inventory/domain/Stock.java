@@ -2,6 +2,7 @@ package com.dskora.quarkus.ecommerce.inventory.domain;
 
 import com.dskora.quarkus.ecommerce.common.domain.event.ResultWithEvents;
 import com.dskora.quarkus.ecommerce.inventory.event.ProductRegisteredInStockEvent;
+import com.dskora.quarkus.ecommerce.inventory.event.ProductStockReleasedEvent;
 import com.dskora.quarkus.ecommerce.inventory.event.ProductStockReservedEvent;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -38,12 +39,20 @@ public class Stock {
     }
 
     public ResultWithEvents<Stock> reserveStock(UUID orderId, int quantity) throws ProductOutOfStockException {
-        if (quantity > quantity) {
+        if (quantity > this.quantity) {
             throw new ProductOutOfStockException();
         }
 
         this.quantity -= quantity;
         ProductStockReservedEvent event = new ProductStockReservedEvent(orderId);
+
+        return new ResultWithEvents<>(this, event);
+    }
+
+    public ResultWithEvents<Stock> releaseStock(UUID orderId, int quantity)
+    {
+        this.quantity += quantity;
+        ProductStockReleasedEvent event = new ProductStockReleasedEvent(orderId);
 
         return new ResultWithEvents<>(this, event);
     }

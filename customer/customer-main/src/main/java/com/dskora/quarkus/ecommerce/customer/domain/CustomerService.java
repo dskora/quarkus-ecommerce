@@ -43,7 +43,7 @@ public class CustomerService {
             entityManager.persist(customer);
             domainEventPublisher.publish(Customer.class, customer.getId(), customerWithEvents.events);
         } catch (CustomerCreditLimitExceededException e) {
-            domainEventPublisher.publish(Customer.class, customer.getId(), Arrays.asList(new CustomerCreditLimitExceededEvent()));
+            domainEventPublisher.publish(Customer.class, customer.getId(), Arrays.asList(new CustomerCreditLimitExceededEvent(customerId, orderId, amount)));
         }
 
         return customer;

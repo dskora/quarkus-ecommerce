@@ -1,5 +1,6 @@
 package com.dskora.quarkus.ecommerce.payment.client;
 
+import com.dskora.quarkus.ecommerce.payment.api.web.CancelPaymentResponse;
 import com.dskora.quarkus.ecommerce.payment.api.web.CreatePaymentRequest;
 import com.dskora.quarkus.ecommerce.payment.api.web.CreatePaymentResponse;
 import jakarta.ws.rs.POST;
@@ -19,4 +20,8 @@ public interface PaymentClient {
     @PUT
     @Path("/payments/{orderId}/complete")
     CreatePaymentResponse completePayment(@PathParam("orderId") UUID orderId);
+
+    @PUT
+    @Path("/payments/{orderId}/cancel")
+    CancelPaymentResponse cancelPayment(@PathParam("orderId") UUID orderId);
 }

@@ -44,4 +44,16 @@ public class StockService {
 
         return inventory;
     }
+
+    @Transactional
+    public Stock releaseProductStock(UUID orderId, UUID productId, int quantity)
+    {
+        Stock inventory = inventoryRepository.findByProductId(productId);
+
+        ResultWithEvents<Stock> inventoryWithEvents = inventory.releaseStock(orderId, quantity);
+        inventoryRepository.persist(inventory);
+        domainEventPublisher.publish(Stock.class, inventory.getId(), inventoryWithEvents.events);
+
+        return inventory;
+    }
 }

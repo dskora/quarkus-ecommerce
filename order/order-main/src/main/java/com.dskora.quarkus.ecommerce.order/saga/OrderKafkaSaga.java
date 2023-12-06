@@ -6,19 +6,25 @@ import com.dskora.quarkus.ecommerce.common.domain.valueobject.Money;
 import com.dskora.quarkus.ecommerce.customer.api.web.ReserveCustomerCreditRequest;
 import com.dskora.quarkus.ecommerce.customer.api.web.ReserveCustomerCreditResponse;
 import com.dskora.quarkus.ecommerce.customer.client.CustomerClient;
+import com.dskora.quarkus.ecommerce.customer.event.CustomerCreditLimitExceededEvent;
 import com.dskora.quarkus.ecommerce.customer.event.CustomerCreditReservedEvent;
+import com.dskora.quarkus.ecommerce.inventory.api.web.ReleaseProductStockRequest;
+import com.dskora.quarkus.ecommerce.inventory.api.web.ReleaseProductStockResponse;
 import com.dskora.quarkus.ecommerce.inventory.api.web.ReserveProductStockRequest;
 import com.dskora.quarkus.ecommerce.inventory.api.web.ReserveProductStockResponse;
 import com.dskora.quarkus.ecommerce.inventory.client.InventoryClient;
 import com.dskora.quarkus.ecommerce.inventory.event.ProductOutOfStockEvent;
+import com.dskora.quarkus.ecommerce.inventory.event.ProductStockReleasedEvent;
 import com.dskora.quarkus.ecommerce.inventory.event.ProductStockReservedEvent;
 import com.dskora.quarkus.ecommerce.order.domain.Order;
 import com.dskora.quarkus.ecommerce.order.domain.OrderService;
+import com.dskora.quarkus.ecommerce.payment.api.web.CancelPaymentResponse;
 import com.dskora.quarkus.ecommerce.payment.api.web.CompletePaymentResponse;
 import com.dskora.quarkus.ecommerce.payment.api.web.CreatePaymentRequest;
 import com.dskora.quarkus.ecommerce.payment.api.web.CreatePaymentResponse;
 import com.dskora.quarkus.ecommerce.payment.client.PaymentClient;
 import com.dskora.quarkus.ecommerce.payment.common.PaymentMethod;
+import com.dskora.quarkus.ecommerce.payment.event.PaymentCancelledEvent;
 import com.dskora.quarkus.ecommerce.payment.event.PaymentCompletedEvent;
 import com.dskora.quarkus.ecommerce.payment.event.PaymentRequestedEvent;
 import com.dskora.quarkus.ecommerce.shipment.ShipmentClient;
@@ -97,6 +103,19 @@ public class OrderKafkaSaga {
                 PaymentCompletedEvent event = objectMapper.readValue(message.getPayload(), PaymentCompletedEvent.class);
                 Order order = this.orderService.findOrder(event.getOrderId());
                 CreateShipmentRequest response = this.shipmentClient.requestShipment(new CreateShipmentRequest(event.getOrderId(), order.getShipmentDetails().getShipmentProvider(), order.getShipmentDetails().getShipmentAddress()));
+            }
+            if (eventType.equals(CustomerCreditLimitExceededEvent.class.getSimpleName())) {
+                CustomerCreditLimitExceededEvent event = objectMapper.readValue(message.getPayload(), CustomerCreditLimitExceededEvent.class);
+                CancelPaymentResponse response = this.paymentClient.cancelPayment(event.getOrderId());
+            }
+            if (eventType.equals(PaymentCancelledEvent.class.getSimpleName())) {
+                PaymentCancelledEvent event = objectMapper.readValue(message.getPayload(), PaymentCancelledEvent.class);
+                Order order = this.orderService.findOrder(event.getOrderId());
+                ReleaseProductStockResponse response = this.inventoryClient.releaseProductStock(new ReleaseProductStockRequest(event.getOrderId(), order.getProductId(), order.getQuantity()));
+            }
+            if (eventType.equals(ProductStockReleasedEvent.class.getSimpleName())) {
+                ProductStockReleasedEvent event = objectMapper.readValue(message.getPayload(), ProductStockReleasedEvent.class);
+                this.orderService.rejectOrder(event.getOrderId(), "");
             }
         } catch (JsonMappingException e) {
             return message.nack(e);
