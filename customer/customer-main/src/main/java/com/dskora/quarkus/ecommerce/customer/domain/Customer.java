@@ -7,6 +7,7 @@ import com.dskora.quarkus.ecommerce.customer.event.CustomerCreditReservedEvent;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -15,6 +16,7 @@ import org.hibernate.type.SqlTypes;
 import java.time.Instant;
 import java.util.UUID;
 
+@Getter
 @Entity(name = "customers")
 public class Customer {
     @Id

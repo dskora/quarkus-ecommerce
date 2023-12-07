@@ -71,7 +71,7 @@ e2e-test/customer-uses-account-credit.sh
 
 ### Scenario
 Register a new customer with credit<br />
-Set an inventory stock<br />
+Set an inventory stock<br /> 
 Customer exceeds its own account credit to finalize an order<br />
 Order is rejected
 

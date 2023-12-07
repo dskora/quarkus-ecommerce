@@ -48,4 +48,12 @@ public class CustomerService {
 
         return customer;
     }
+
+    public CustomerDto findCustomer(UUID customerId) {
+        return convert(entityManager.find(Customer.class, customerId));
+    }
+
+    private CustomerDto convert(Customer customer) {
+        return new CustomerDto(customer.getId(), customer.getName(), customer.getCreditLimit().getAmount());
+    }
 }

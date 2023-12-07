@@ -1,6 +1,8 @@
 package com.dskora.quarkus.ecommerce.customer.api.web;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -8,12 +10,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReserveCustomerCreditResponse {
      private UUID customerId;
-
-     public ReserveCustomerCreditResponse() {}
-
-     public ReserveCustomerCreditResponse(UUID customerId) {
-          this.customerId = customerId;
-     }
 }

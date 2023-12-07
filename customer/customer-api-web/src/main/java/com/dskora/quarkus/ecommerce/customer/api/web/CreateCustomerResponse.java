@@ -1,10 +1,14 @@
 package com.dskora.quarkus.ecommerce.customer.api.web;
 
-import lombok.Data;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateCustomerResponse {
-    private final UUID id;
+    private UUID id;
 }
