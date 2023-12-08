@@ -40,4 +40,9 @@ public class Money {
     public Money subtract(Money other) {
         return new Money(amount.subtract(other.amount));
     }
+
+    @Override
+    public String toString() {
+        return amount.toString();
+    }
 }

@@ -6,18 +6,15 @@ import com.dskora.quarkus.ecommerce.common.domain.valueobject.Money;
 import com.dskora.quarkus.ecommerce.customer.event.CustomerCreditLimitExceededEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.UUID;
 
 @ApplicationScoped
 public class CustomerService {
-    @PersistenceContext
-    EntityManager entityManager;
+    @Inject
+    CustomerRepository customerRepository;
 
     @Inject
     DomainEventPublisher domainEventPublisher;
@@ -27,7 +24,7 @@ public class CustomerService {
         ResultWithEvents<Customer> customerWithEvents = Customer.create(name, creditLimit);
         Customer customer = customerWithEvents.result;
 
-        entityManager.persist(customer);
+        customerRepository.persist(customer);
         domainEventPublisher.publish(Customer.class, customer.getId(), customerWithEvents.events);
 
         return customer;
@@ -36,11 +33,11 @@ public class CustomerService {
     @Transactional
     public Customer reserveCredit(UUID orderId, UUID customerId, Money amount)
     {
-        Customer customer = entityManager.find(Customer.class, customerId);
+        Customer customer = customerRepository.findById(customerId);
 
         try {
             ResultWithEvents<Customer> customerWithEvents = customer.reserveCredit(orderId, amount);
-            entityManager.persist(customer);
+            customerRepository.persist(customer);
             domainEventPublisher.publish(Customer.class, customer.getId(), customerWithEvents.events);
         } catch (CustomerCreditLimitExceededException e) {
             domainEventPublisher.publish(Customer.class, customer.getId(), Arrays.asList(new CustomerCreditLimitExceededEvent(customerId, orderId, amount)));
@@ -50,7 +47,7 @@ public class CustomerService {
     }
 
     public CustomerDto findCustomer(UUID customerId) {
-        return convert(entityManager.find(Customer.class, customerId));
+        return convert(customerRepository.findById(customerId));
     }
 
     private CustomerDto convert(Customer customer) {
