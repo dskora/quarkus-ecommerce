@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -21,13 +22,16 @@ public class StockService {
 
     @Transactional
     public Stock registerProductStock(UUID productId, StockQuantity quantity) {
-        ResultWithEvents<Stock> stockWithEvents = Stock.create(productId, quantity);
-        Stock stock = stockWithEvents.result;
+        Optional<Stock> stock = stockRepository.findByProductIdOptional(productId);
+        ResultWithEvents<Stock> stockWithEvents = stock.isPresent()
+            ? stock.get().increaseStock(quantity)
+            : Stock.create(productId, quantity)
+        ;
 
-        stockRepository.persist(stock);
-        domainEventPublisher.publish(Stock.class, stock.getId(), stockWithEvents.events);
+        stockRepository.persist(stockWithEvents.result);
+        domainEventPublisher.publish(Stock.class, stockWithEvents.result.getId(), stockWithEvents.events);
 
-        return stock;
+        return stockWithEvents.result;
     }
 
     @Transactional
@@ -47,11 +51,11 @@ public class StockService {
     }
 
     @Transactional
-    public Stock releaseProductStock(UUID orderId, UUID productId, StockQuantity quantity)
+    public Stock releaseProductStock(UUID orderId, UUID productId)
     {
         Stock stock = stockRepository.findByProductId(productId);
 
-        ResultWithEvents<Stock> stockWithEvents = stock.releaseStock(orderId, quantity);
+        ResultWithEvents<Stock> stockWithEvents = stock.releaseStock(orderId);
         stockRepository.persist(stock);
         domainEventPublisher.publish(Stock.class, stock.getId(), stockWithEvents.events);
 

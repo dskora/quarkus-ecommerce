@@ -12,13 +12,10 @@ public class ReleaseProductStockRequest {
 
      private UUID productId;
 
-     private int quantity;
-
      public ReleaseProductStockRequest() {}
 
-     public ReleaseProductStockRequest(UUID orderId, UUID productId, int quantity) {
+     public ReleaseProductStockRequest(UUID orderId, UUID productId) {
           this.orderId = orderId;
           this.productId = productId;
-          this.quantity = quantity;
      }
 }

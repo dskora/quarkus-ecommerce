@@ -111,7 +111,7 @@ public class OrderKafkaSaga {
             if (eventType.equals(PaymentCancelledEvent.class.getSimpleName())) {
                 PaymentCancelledEvent event = objectMapper.readValue(message.getPayload(), PaymentCancelledEvent.class);
                 Order order = this.orderService.findOrder(event.getOrderId());
-                ReleaseProductStockResponse response = this.inventoryClient.releaseProductStock(new ReleaseProductStockRequest(event.getOrderId(), order.getProductId(), order.getQuantity()));
+                ReleaseProductStockResponse response = this.inventoryClient.releaseProductStock(new ReleaseProductStockRequest(event.getOrderId(), order.getProductId()));
             }
             if (eventType.equals(ProductStockReleasedEvent.class.getSimpleName())) {
                 ProductStockReleasedEvent event = objectMapper.readValue(message.getPayload(), ProductStockReleasedEvent.class);

@@ -19,7 +19,7 @@ public class StockTest {
         ResultWithEvents<Stock> stockResultWithEvents = Stock.create(UUID.randomUUID(), new StockQuantity(10));
         ProductRegisteredInStockEvent event = (ProductRegisteredInStockEvent) stockResultWithEvents.events.get(0);
 
-        assertThat(event.getQuantity().getNumber(), equalTo(10));
+        assertThat(event.getQuantity().getQuantity(), equalTo(10));
     }
 
     @Test
@@ -27,7 +27,7 @@ public class StockTest {
         ResultWithEvents<Stock> stock = Stock.create(UUID.randomUUID(), new StockQuantity(10));
         ResultWithEvents<Stock> stockResultWithEvents = stock.result.reserveStock(UUID.randomUUID(), new StockQuantity(2));
 
-        assertThat(stockResultWithEvents.result.getQuantity().getNumber(), equalTo(8));
+        assertThat(stockResultWithEvents.result.getQuantity().getQuantity(), equalTo(8));
     }
 
     @Test

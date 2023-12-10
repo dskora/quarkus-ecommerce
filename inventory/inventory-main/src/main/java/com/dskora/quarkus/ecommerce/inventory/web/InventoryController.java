@@ -32,13 +32,13 @@ public class InventoryController {
     @Path("/stock/reserve")
     public ReserveProductStockResponse reserveStock(ReserveProductStockRequest request) {
         StockReservationDto stockReservationDto = stockService.reserveProductStock(request.getOrderId(), request.getProductId(), new StockQuantity(request.getQuantity()));
-        return new ReserveProductStockResponse(stockReservationDto.getOrderId(), stockReservationDto.getProductId(), stockReservationDto.getQuantityReserved().getNumber(), stockReservationDto.getQuantityLeft().getNumber());
+        return new ReserveProductStockResponse(stockReservationDto.getOrderId(), stockReservationDto.getProductId(), stockReservationDto.getQuantityReserved().getQuantity(), stockReservationDto.getQuantityLeft().getQuantity());
     }
 
     @POST
     @Path("/stock/release")
     public ReleaseProductStockResponse releaseStock(ReleaseProductStockRequest request) {
-        Stock stock = stockService.releaseProductStock(request.getOrderId(), request.getProductId(), new StockQuantity(request.getQuantity()));
+        Stock stock = stockService.releaseProductStock(request.getOrderId(), request.getProductId());
         return new ReleaseProductStockResponse(stock.getId());
     }
 
@@ -46,6 +46,6 @@ public class InventoryController {
     @Path("/stock/{id}")
     public StockResponse findStock(@PathParam("id") UUID id) {
         StockDto stockDto = this.stockService.findStock(id);
-        return new StockResponse(stockDto.getProductId(), stockDto.getQuantity().getNumber());
+        return new StockResponse(stockDto.getProductId(), stockDto.getQuantity().getQuantity());
     }
 }
