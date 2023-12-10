@@ -9,11 +9,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class ReserveProductStockResponse {
-    private UUID orderId;
+@NoArgsConstructor
+public class StockResponse {
     private UUID productId;
-    private int quantityReserved;
-    private int quantityLeft;
+    private int quantity;
 }

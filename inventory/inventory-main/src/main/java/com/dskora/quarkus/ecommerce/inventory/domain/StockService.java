@@ -13,47 +13,52 @@ import java.util.UUID;
 @ApplicationScoped
 public class StockService {
     @Inject
-    StockRepository inventoryRepository;
+    StockRepository stockRepository;
 
     @Inject
     DomainEventPublisher domainEventPublisher;
 
     @Transactional
     public Stock registerProductStock(UUID productId, int quantity) {
-        ResultWithEvents<Stock> inventoryWithEvents = Stock.create(productId, quantity);
-        Stock inventory = inventoryWithEvents.result;
+        ResultWithEvents<Stock> stockWithEvents = Stock.create(productId, quantity);
+        Stock stock = stockWithEvents.result;
 
-        inventoryRepository.persist(inventory);
-        domainEventPublisher.publish(Stock.class, inventory.getId(), inventoryWithEvents.events);
+        stockRepository.persist(stock);
+        domainEventPublisher.publish(Stock.class, stock.getId(), stockWithEvents.events);
 
-        return inventory;
+        return stock;
     }
 
     @Transactional
-    public Stock reserveProductStock(UUID orderId, UUID productId, int quantity)
+    public StockReservationDto reserveProductStock(UUID orderId, UUID productId, int quantity)
     {
-        Stock inventory = inventoryRepository.findByProductId(productId);
+        Stock stock = stockRepository.findByProductId(productId);
 
         try {
-            ResultWithEvents<Stock> inventoryWithEvents = inventory.reserveStock(orderId, quantity);
-            inventoryRepository.persist(inventory);
-            domainEventPublisher.publish(Stock.class, inventory.getId(), inventoryWithEvents.events);
+            ResultWithEvents<Stock> stockWithEvents = stock.reserveStock(orderId, quantity);
+            stockRepository.persist(stockWithEvents.result);
+            domainEventPublisher.publish(Stock.class, stock.getId(), stockWithEvents.events);
         } catch (ProductOutOfStockException e) {
-            domainEventPublisher.publish(Stock.class, inventory.getId(), Arrays.asList(new ProductOutOfStockEvent(orderId, productId, inventory.getQuantity())));
+            domainEventPublisher.publish(Stock.class, stock.getId(), Arrays.asList(new ProductOutOfStockEvent(orderId, productId, stock.getQuantity())));
         }
 
-        return inventory;
+        return new StockReservationDto(orderId, productId, quantity, stock.getQuantity());
     }
 
     @Transactional
     public Stock releaseProductStock(UUID orderId, UUID productId, int quantity)
     {
-        Stock inventory = inventoryRepository.findByProductId(productId);
+        Stock stock = stockRepository.findByProductId(productId);
 
-        ResultWithEvents<Stock> inventoryWithEvents = inventory.releaseStock(orderId, quantity);
-        inventoryRepository.persist(inventory);
-        domainEventPublisher.publish(Stock.class, inventory.getId(), inventoryWithEvents.events);
+        ResultWithEvents<Stock> stockWithEvents = stock.releaseStock(orderId, quantity);
+        stockRepository.persist(stock);
+        domainEventPublisher.publish(Stock.class, stock.getId(), stockWithEvents.events);
 
-        return inventory;
+        return stock;
+    }
+
+    public StockDto findStock(UUID productId) {
+        Stock stock = stockRepository.findByProductId(productId);
+        return new StockDto(stock.getProductId(), stock.getQuantity());
     }
 }

@@ -6,11 +6,13 @@ import com.dskora.quarkus.ecommerce.inventory.event.ProductStockReleasedEvent;
 import com.dskora.quarkus.ecommerce.inventory.event.ProductStockReservedEvent;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.Getter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
+@Getter
 @Entity(name = "inventory_stock")
 public class Stock {
     @Id
@@ -32,10 +34,10 @@ public class Stock {
 
     public static ResultWithEvents<Stock> create(UUID productId, int quantity)
     {
-        Stock inventory = new Stock(productId, quantity);
+        Stock stock = new Stock(productId, quantity);
         ProductRegisteredInStockEvent event = new ProductRegisteredInStockEvent(productId, quantity);
 
-        return new ResultWithEvents<>(inventory, event);
+        return new ResultWithEvents<>(stock, event);
     }
 
     public ResultWithEvents<Stock> reserveStock(UUID orderId, int quantity) throws ProductOutOfStockException {
@@ -55,13 +57,5 @@ public class Stock {
         ProductStockReleasedEvent event = new ProductStockReleasedEvent(orderId);
 
         return new ResultWithEvents<>(this, event);
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public int getQuantity() {
-        return quantity;
     }
 }

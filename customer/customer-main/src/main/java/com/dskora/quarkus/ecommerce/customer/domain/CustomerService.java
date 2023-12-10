@@ -37,7 +37,7 @@ public class CustomerService {
 
         try {
             ResultWithEvents<Customer> customerWithEvents = customer.reserveCredit(orderId, amount);
-            customerRepository.persist(customer);
+            customerRepository.persist(customerWithEvents.result);
             domainEventPublisher.publish(Customer.class, customer.getId(), customerWithEvents.events);
         } catch (CustomerCreditLimitExceededException e) {
             domainEventPublisher.publish(Customer.class, customer.getId(), Arrays.asList(new CustomerCreditLimitExceededEvent(customerId, orderId, amount)));

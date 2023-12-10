@@ -3,7 +3,6 @@ package com.dskora.quarkus.ecommerce.customer.domain;
 import com.dskora.quarkus.ecommerce.common.domain.event.ResultWithEvents;
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.Money;
 import com.dskora.quarkus.ecommerce.customer.event.CustomerCreatedEvent;
-import com.dskora.quarkus.ecommerce.customer.event.CustomerCreditLimitExceededEvent;
 import com.dskora.quarkus.ecommerce.customer.event.CustomerCreditReservedEvent;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
