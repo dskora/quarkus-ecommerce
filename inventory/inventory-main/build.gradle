@@ -5,6 +5,7 @@ plugins {
 dependencies {
     implementation project(":common")
     implementation project(":infrastructure")
+    implementation project(":inventory:inventory-common")
     implementation project(":inventory:inventory-api-web")
     implementation project(":inventory:inventory-event")
 

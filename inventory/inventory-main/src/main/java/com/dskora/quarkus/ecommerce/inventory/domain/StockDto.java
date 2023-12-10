@@ -1,5 +1,6 @@
 package com.dskora.quarkus.ecommerce.inventory.domain;
 
+import com.dskora.quarkus.ecommerce.inventory.common.StockQuantity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,5 +12,5 @@ import java.util.UUID;
 @Getter
 public class StockDto {
     private UUID productId;
-    private int quantity;
+    private StockQuantity quantity;
 }

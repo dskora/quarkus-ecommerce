@@ -1,6 +1,7 @@
 package com.dskora.quarkus.ecommerce.inventory.web;
 
 import com.dskora.quarkus.ecommerce.inventory.api.web.*;
+import com.dskora.quarkus.ecommerce.inventory.common.StockQuantity;
 import com.dskora.quarkus.ecommerce.inventory.domain.Stock;
 import com.dskora.quarkus.ecommerce.inventory.domain.StockDto;
 import com.dskora.quarkus.ecommerce.inventory.domain.StockReservationDto;
@@ -23,21 +24,21 @@ public class InventoryController {
     @Path("/stock")
     @ResponseStatus(201)
     public RegisterProductStockResponse registerStock(RegisterProductStockRequest request) {
-        Stock stock = stockService.registerProductStock(request.getProductId(), request.getQuantity());
+        Stock stock = stockService.registerProductStock(request.getProductId(), new StockQuantity(request.getQuantity()));
         return new RegisterProductStockResponse(stock.getId());
     }
 
     @POST
     @Path("/stock/reserve")
     public ReserveProductStockResponse reserveStock(ReserveProductStockRequest request) {
-        StockReservationDto stockReservationDto = stockService.reserveProductStock(request.getOrderId(), request.getProductId(), request.getQuantity());
-        return new ReserveProductStockResponse(stockReservationDto.getOrderId(), stockReservationDto.getProductId(), stockReservationDto.getQuantityReserved(), stockReservationDto.getQuantityLeft());
+        StockReservationDto stockReservationDto = stockService.reserveProductStock(request.getOrderId(), request.getProductId(), new StockQuantity(request.getQuantity()));
+        return new ReserveProductStockResponse(stockReservationDto.getOrderId(), stockReservationDto.getProductId(), stockReservationDto.getQuantityReserved().getNumber(), stockReservationDto.getQuantityLeft().getNumber());
     }
 
     @POST
     @Path("/stock/release")
     public ReleaseProductStockResponse releaseStock(ReleaseProductStockRequest request) {
-        Stock stock = stockService.releaseProductStock(request.getOrderId(), request.getProductId(), request.getQuantity());
+        Stock stock = stockService.releaseProductStock(request.getOrderId(), request.getProductId(), new StockQuantity(request.getQuantity()));
         return new ReleaseProductStockResponse(stock.getId());
     }
 
@@ -45,6 +46,6 @@ public class InventoryController {
     @Path("/stock/{id}")
     public StockResponse findStock(@PathParam("id") UUID id) {
         StockDto stockDto = this.stockService.findStock(id);
-        return new StockResponse(stockDto.getProductId(), stockDto.getQuantity());
+        return new StockResponse(stockDto.getProductId(), stockDto.getQuantity().getNumber());
     }
 }

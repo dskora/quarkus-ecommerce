@@ -2,6 +2,7 @@ package com.dskora.quarkus.ecommerce.inventory.domain;
 
 import com.dskora.quarkus.ecommerce.common.domain.event.ResultWithEvents;
 import com.dskora.quarkus.ecommerce.common.domain.event.publisher.DomainEventPublisher;
+import com.dskora.quarkus.ecommerce.inventory.common.StockQuantity;
 import com.dskora.quarkus.ecommerce.inventory.event.ProductOutOfStockEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -19,7 +20,7 @@ public class StockService {
     DomainEventPublisher domainEventPublisher;
 
     @Transactional
-    public Stock registerProductStock(UUID productId, int quantity) {
+    public Stock registerProductStock(UUID productId, StockQuantity quantity) {
         ResultWithEvents<Stock> stockWithEvents = Stock.create(productId, quantity);
         Stock stock = stockWithEvents.result;
 
@@ -30,7 +31,7 @@ public class StockService {
     }
 
     @Transactional
-    public StockReservationDto reserveProductStock(UUID orderId, UUID productId, int quantity)
+    public StockReservationDto reserveProductStock(UUID orderId, UUID productId, StockQuantity quantity)
     {
         Stock stock = stockRepository.findByProductId(productId);
 
@@ -46,7 +47,7 @@ public class StockService {
     }
 
     @Transactional
-    public Stock releaseProductStock(UUID orderId, UUID productId, int quantity)
+    public Stock releaseProductStock(UUID orderId, UUID productId, StockQuantity quantity)
     {
         Stock stock = stockRepository.findByProductId(productId);
 
