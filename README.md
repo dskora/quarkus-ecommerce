@@ -69,6 +69,8 @@ Customer uses its own account credit to finalize an order
 e2e-test/customer-uses-account-credit.sh
 ```
 
+![ScreenShot 1](images/customer-uses-credit-success.png)
+
 ### Scenario
 Register a new customer with credit<br />
 Set an inventory stock<br /> 
@@ -80,6 +82,8 @@ Order is rejected
 e2e-test/customer-exceeds-account-credit.sh
 ```
 
+![ScreenShot 1](images/customer-exceeds-credit.png)
+
 ### Scenario
 Register a new customer with credit<br />
 Set an inventory stock<br />
@@ -90,3 +94,5 @@ Order is rejected
 ```bash
 e2e-test/product-out-of-stock.sh
 ```
+
+![ScreenShot 1](images/product-out-of-stock.png)
