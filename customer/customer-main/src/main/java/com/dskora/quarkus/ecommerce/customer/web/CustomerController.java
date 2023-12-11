@@ -1,10 +1,7 @@
 package com.dskora.quarkus.ecommerce.customer.web;
 
 import com.dskora.quarkus.ecommerce.common.domain.valueobject.Money;
-import com.dskora.quarkus.ecommerce.customer.api.web.CreateCustomerRequest;
-import com.dskora.quarkus.ecommerce.customer.api.web.CreateCustomerResponse;
-import com.dskora.quarkus.ecommerce.customer.api.web.ReserveCustomerCreditRequest;
-import com.dskora.quarkus.ecommerce.customer.api.web.ReserveCustomerCreditResponse;
+import com.dskora.quarkus.ecommerce.customer.api.web.*;
 import com.dskora.quarkus.ecommerce.customer.domain.Customer;
 import com.dskora.quarkus.ecommerce.customer.domain.CustomerDto;
 import com.dskora.quarkus.ecommerce.customer.domain.CustomerService;
@@ -30,10 +27,17 @@ public class CustomerController {
     }
 
     @POST
-    @Path("/credit")
+    @Path("/credit/reserve")
     public ReserveCustomerCreditResponse reserveCustomerCredit(ReserveCustomerCreditRequest reserveCustomerCreditRequest) {
         Customer customer = customerService.reserveCredit(reserveCustomerCreditRequest.getOrderId(), reserveCustomerCreditRequest.getCustomerId(), new Money(reserveCustomerCreditRequest.getAmount()));
         return new ReserveCustomerCreditResponse(customer.getId());
+    }
+
+    @POST
+    @Path("/credit/release")
+    public ReleaseCustomerCreditResponse releaseCustomerCredit(ReleaseCustomerCreditRequest reserveCustomerCreditRequest) {
+        Customer customer = customerService.releaseCredit(reserveCustomerCreditRequest.getCustomerId(), reserveCustomerCreditRequest.getOrderId());
+        return new ReleaseCustomerCreditResponse(customer.getId());
     }
 
     @GET

@@ -74,7 +74,7 @@ public class CustomerControllerTest {
                 .contentType(ContentType.JSON)
                 .body(reservePayload)
                 .when()
-                .post("/customers/credit")
+                .post("/customers/credit/reserve")
                 .then()
                 .statusCode(200)
                 .extract().as(ReserveCustomerCreditResponse.class);

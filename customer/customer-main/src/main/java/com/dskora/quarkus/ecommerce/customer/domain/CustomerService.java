@@ -46,6 +46,18 @@ public class CustomerService {
         return customer;
     }
 
+    @Transactional
+    public Customer releaseCredit(UUID customerId, UUID orderId)
+    {
+        Customer customer = customerRepository.findById(customerId);
+
+        ResultWithEvents<Customer> customerWithEvents = customer.releaseCredit(orderId);
+        customerRepository.persist(customer);
+        domainEventPublisher.publish(Customer.class, customer.getId(), customerWithEvents.events);
+
+        return customer;
+    }
+
     public CustomerDto findCustomer(UUID customerId) {
         return convert(customerRepository.findById(customerId));
     }
